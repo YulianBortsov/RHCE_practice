@@ -1,0 +1,19 @@
+---
+- name: Install packages
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install packages on webservers
+      dnf:
+        name:
+          - tcpdump
+          - s-nail
+        state: installed
+      when: "'webservers' in group_names"
+    - name: Install packages on db
+      dnf:
+        name:
+          - lsof
+          - s-nail
+        state: installed
+      when: "'db' in group_names"

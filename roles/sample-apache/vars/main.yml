@@ -1,0 +1,10 @@
+---
+# vars file for sample-apache
+pkgs:
+  - httpd
+  - mod_ssl
+  - php
+  - firewalld
+allowed_ports:
+  - 80/tcp
+  - 443/tcp

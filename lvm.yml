@@ -1,0 +1,27 @@
+---
+- name: Create logical volumes
+  hosts: all
+  tasks:
+    - block:
+        - name: Create a logical volume of 1500m
+          lvol:
+            vg: research
+            lv: data
+            size: 1500
+        - name: Create a ext2 filesystem on /dev/sdb1
+          filesystem:
+            fstype: ext4
+            dev: /dev/research/data
+      rescue:
+        - debug:
+            msg: Could not create logical volume of that size
+        - name: Create a logical volume of 800m
+          lvol:
+            vg: research
+            lv: data
+            size: 800
+          when: ansible_lvm.vgs.research is defined
+          ignore_errors: True
+    - debug:
+        msg: Volume group done not exist
+      when: ansible_lvm.vgs.research is not defined

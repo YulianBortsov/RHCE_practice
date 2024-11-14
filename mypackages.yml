@@ -1,0 +1,20 @@
+---
+- name: Installing packages
+  hosts: all
+  tasks:
+    - dnf:
+       name:
+         - httpd
+         - mod_ssl
+       state: present
+    - name: install development tools group
+      dnf:
+        name: '@Development tools'
+        state: present
+      when: "'prod' in group_names"
+    - name: update all packages
+      dnf:
+        name: '*'
+        state: latest
+      when: "'dev' in group_names"
+

@@ -1,0 +1,30 @@
+---
+- name: configure ssh
+  hosts: all
+  tasks:
+    - name: replace x11 forwarding
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^X11Forwarding yes"
+        line: "X11Forwarding no"
+      notify: Restart ssh
+    - name: replace auth tries
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^#MaxAuthTries 6"
+        line: "MaxAuthTries 3"
+      notify: Restart ssh
+    - name: Permit root login
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: Restart ssh
+
+  handlers:
+    - name: Restart ssh
+      service:
+        name: sshd
+        state: restarted
+
+

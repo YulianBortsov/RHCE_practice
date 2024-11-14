@@ -1,0 +1,11 @@
+---
+- name: another play related to facts, A custom Ansible fact server_role=mysql is created that can be retrieved from ansible_local.custom.sample_exam when using Ansible setup module.
+  hosts: prod
+  tasks:
+    - name: ensure the director exist
+      file:
+        path: /etc/ansible/facts.d
+        state: directory
+    - copy:
+        content: "[sample_exam]\nserver_role=mysql\n"
+        dest: /etc/ansible/facts.d/custom.fact

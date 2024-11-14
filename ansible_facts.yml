@@ -1,0 +1,13 @@
+---
+- name: working with ansible facts
+  hosts: all
+  tasks:
+    - name: ensure facts.d directory exist
+      file:
+        path: /etc/ansible/facts.d
+        state: directory
+        recurse: yes
+    - name: copy the content to the file
+      copy:
+        content: "[general]\nname=proxy\n"
+        dest: /etc/ansible/facts.d/env.fact

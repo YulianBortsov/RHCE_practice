@@ -1,0 +1,26 @@
+---
+# tasks file for apache
+- name: Install packages
+  dnf:
+    name: "{{ item }}"
+    state: installed
+  loop: "{{ pkgs }}"
+- name: Start and Enable the services
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: True
+  loop: "{{ pkgs }}"
+- name: allow ports
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    immediate: True
+    permanent: True
+  loop: "{{ allowed_ports }}"
+  notify: Restart firewalld
+- name: Create index.html file with custom message
+  copy:
+    content: Welcome, you have connected to "{{ ansible_fqdn }}"
+    dest: /var/www/html/index.html
+

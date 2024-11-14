@@ -1,0 +1,6 @@
+HOST={{ inventory_hostname }}
+MEMORY={{ ansible_facts['memtotal_mb'] }} MB
+BIOS={{ ansible_facts['bios_version'] }}
+VDA_DISK_SIZE={{ ansible_facts['devices']['sba']['size'] | default('NONE') }}
+VDB_DISK_SIZE={{ ansible_facts['devices']['nvme0n1']['size'] | default('NONE') }}
+

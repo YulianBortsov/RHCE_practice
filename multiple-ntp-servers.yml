@@ -1,0 +1,17 @@
+---
+- name: Example with multiple servers
+  hosts: all
+  vars:
+    timesync_ntp_servers:
+      - hostname: 1.pl.pool.ntp.org
+        iburst: true
+        pool: True
+      - hostname: 2.pl.pool.ntp.org
+        iburst: true
+        pool: True
+  roles:
+    - rhel-system-roles.timesync
+  post_tasks:
+    - name: Set the timezone
+      timezone:
+        name: UTC

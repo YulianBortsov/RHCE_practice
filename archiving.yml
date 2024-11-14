@@ -1,0 +1,32 @@
+---
+- name: Creating the backup dir on the control node
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Create /backup dir
+      file:
+        path: /backup
+        owner: ansible7
+        mode: 0755
+        state: directory
+        recurse: True
+
+- name: Create a /backup dir on the managed hosts
+  hosts: all
+  tasks:
+    - file:
+        path: /backup
+        owner: ansible7
+        mode: 0755
+        state: directory
+        recurse: True
+    - name: archive the /etc dir
+      community.general.archive:
+        path: /etc
+        dest: /backup/configuration.gz
+
+    - name: copy the archives from the managed hosts to the control
+      fetch:
+        src: /backup/configuration.gz
+        dest: /backup/{{ ansible_hostname }}-configuration.gz
+

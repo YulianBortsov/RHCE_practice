@@ -1,0 +1,30 @@
+---
+- name: Create users based on conditions
+  hosts: all
+  vars_files:
+    - vars/users_list.yml
+    - lock.yml
+  tasks:
+    - name: Create groups managers and devops
+      group:
+        name: "{{ item }}"
+      loop:
+        - managers
+        - devops
+    - name: Create users for managers group
+      user:
+        name: "{{ item.username }}"
+        groups: managers
+        append: True
+        password: "{{ webservers_pass | password_hash('sha512') }}"
+      loop: "{{ users }}"
+      when: "'webservers' in group_names and item.job == 'manager'"
+    - name: Create users for devops group
+      user:
+        name: "{{ item.username }}"
+        groups: devops
+        append: True
+        password: "{{ db_pass | password_hash('sha512') }}"
+      loop: "{{ users }}"
+      when: "'db' in group_names and item.job == 'developer'"
+

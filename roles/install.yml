@@ -1,0 +1,4 @@
+- name: balancer
+  src: http://classroom.example.com/role1.tar.gz
+- name: phphello
+  src: http://classroom.example.com/role2.tar.gz

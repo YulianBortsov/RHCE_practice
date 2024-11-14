@@ -1,0 +1,15 @@
+---
+- name: creating users
+  hosts: all
+  vars_files:
+    - secret.yml
+    - vars/users.yml
+  tasks:
+    - name: Create users based on the conditions
+      user:
+        name: "{{ item.username }}"
+        groups: wheel
+        shell: /bin/bash
+        password: "{{ user_password | password_hash('sha512') }}"
+      loop: "{{ users }}"
+      when: ( item.uid|string|first == '2' and 'webservers' in group_names ) or ( item.uid|string|first == '3' and 'db' in group_names )

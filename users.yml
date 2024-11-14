@@ -1,0 +1,30 @@
+---
+- name: create specified users
+  hosts: all
+  vars_files:
+    - vars/users.yml
+    - secret.yml
+  vars:
+    hash: "{{ user_password | password_hash('sha512') }}"
+  tasks:
+    - name: print user_password var
+      debug:
+        msg: "Password is {{ user_password }}, Hash is {{ hash }}"
+    - name: add the user "{{ item.username }}" with a specific uid and primary group of wheel
+      user:
+        name: "{{ item.username }}"
+        password: "{{ user_password | password_hash('sha512') }}"
+        groups: wheel
+        append: True
+        shell: '/bin/bash'
+      loop: "{{ users }}"
+      when: ( item.uid|string|first == '2' and inventory_hostname in groups['webservers'] ) or ( item.uid|string|first == '3' and inventory_hostname in groups['db'] )
+
+    - name: ssh keys
+      authorized_key:
+        user: "{{ item.username }}"
+        state: present
+        key: "{{ lookup('file', '/home/ansible7/.ssh/id_rsa.pub') }}"
+      loop: "{{ users }}"
+      when: ( item.uid|string|first == '2' and inventory_hostname in groups['webservers'] ) or ( item.uid|string|first == '3' and inventory_hostname in groups['db'] )
+

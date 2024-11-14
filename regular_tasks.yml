@@ -1,0 +1,11 @@
+---
+- name: regular tasks
+  hosts: webservers
+  gather_facts: False
+  tasks:
+    - name: append date command output to the time.log
+      cron:
+        name: append date command
+        minute: 0
+        user: root
+        job: /usr/bin/date >> /var/log/time.log

@@ -1,0 +1,8 @@
+---
+# vars file for apache
+pkgs:
+  - httpd
+  - firewalld
+allowed_ports:
+  - 80/tcp
+  - 443/tcp

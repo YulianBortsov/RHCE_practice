@@ -1,0 +1,22 @@
+---
+- hosts: ansible1
+  tasks: 
+    - name: create partition number2
+      parted: 
+        device: /dev/sda
+        number: 2
+        part_start: 800MiB
+        part_end: 1900MiB
+        state: present
+
+    - name: make it a swap
+      shell: mkswap /dev/sda2
+
+    - name: mount it
+      mount: 
+       path: none
+       src: /dev/sda2
+       fstype: swap
+       state: present
+    - name: apply it
+      shell: swapon -a

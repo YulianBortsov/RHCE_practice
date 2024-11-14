@@ -1,0 +1,7 @@
+---
+- name: Creating a report template
+  hosts: all
+  tasks:
+    - template:
+        src: report.j2
+        dest: /root/report.txt

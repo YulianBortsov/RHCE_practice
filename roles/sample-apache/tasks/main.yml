@@ -1,0 +1,30 @@
+---
+# tasks file for sample-apache
+- name: Install packages
+  dnf:
+    name: "{{ item }}"
+    state: installed
+  loop: "{{ pkgs }}"
+
+- name: Start and enable httpd sevice
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop:
+    - httpd
+    - firewalld
+
+- name: Add ports 80 and 443 to the firewall
+  firewalld:
+    port: "{{ item }}"
+    permanent: True
+    immediate: True
+    state: enabled
+  loop: "{{ allowed_ports }}"
+
+- name: add the template
+  template:
+    src: index.html.j2
+    dest: /var/www/html
+  notify: Restart httpd

@@ -1,0 +1,9 @@
+---
+- name: set boot target to multi user
+  hosts: all
+  gather_facts: False
+  tasks:
+    - file:
+        path: /etc/systemd/system/default.target
+        src: /etc/systemd/system/multi-user.target
+        state: link

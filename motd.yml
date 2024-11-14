@@ -1,0 +1,15 @@
+---
+- name: change the /etc/motd file content based on inventory group
+  hosts: all
+  tasks:
+    - lineinfile:
+       line: welcome to prod!
+       path: /etc/motd
+       state: present
+      when: "'webservers' in group_names"
+    - lineinfile:
+        line: welcome to dev!
+        path: /etc/motd
+        state: present
+      when: "'db' in group_names"
+

@@ -1,0 +1,14 @@
+---
+- name: using sysctl module with conditionals about host system memory
+  hosts: all
+  tasks:
+    - name: set vm.swapiness to 10 if more than 1G RAM
+      sysctl:
+        name: vm.swappiness
+        value: 10
+      when: ansible_memtotal_mb > 1024
+
+    - name: Print message
+      debug:
+        msg: "{{ inventory_hostname }} has less than 1024MB of RAM"
+      when: ansible_memtotal_mb <= 1024
